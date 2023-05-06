@@ -5,7 +5,6 @@ definePageMeta({
   layout: "centered",
 });
 
-
 interface LoginPayload {
     email: string;
     password: string;
@@ -18,6 +17,7 @@ const form = ref<LoginPayload>({
 
 async function login(payload: LoginPayload){
     await axios.post("/login", payload);
+    await useRouter().push("/me");
 }
 </script>
 <template>
