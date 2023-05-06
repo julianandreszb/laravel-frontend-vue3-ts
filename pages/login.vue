@@ -1,20 +1,37 @@
 <script setup lang="ts">
+import axios from "axios";
+
 definePageMeta({
   layout: "centered",
 });
+
+
+interface LoginPayload {
+    email: string;
+    password: string;
+}
+
+const form = ref<LoginPayload>({
+    email: "",
+    password: ""
+});
+
+async function login(payload: LoginPayload){
+    await axios.post("/login", payload);
+}
 </script>
 <template>
   <div class="login">
     <h1>Login</h1>
-    <form>
+    <form @submit.prevent="login(<LoginPayload>form)">
       <label>
         <div>Email</div>
-        <input type="text" />
+        <input v-model="form.email" type="text" />
       </label>
 
       <label>
         <div>Password</div>
-        <input type="password" />
+        <input v-model="form.password" type="password" />
       </label>
       <button class="btn">Login</button>
     </form>
