@@ -1,8 +1,10 @@
 <script setup>
-import axios from "axios";
-await axios.post("/logout");
-useRouter().replace("/login");
+import {useAuth} from "~/composables/useAuth";
+
+const {logout} = useAuth();
+logout();
 </script>
+
 <template>
-  <div>Logging Out...</div>
+    <div>Logging Out...</div>
 </template>

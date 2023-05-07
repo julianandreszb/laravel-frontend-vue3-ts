@@ -1,47 +1,42 @@
 <script setup lang="ts">
-import axios from "axios";
+import {useAuth, LoginPayload} from "~/composables/useAuth";
+
+const {login} = useAuth();
 
 definePageMeta({
-  layout: "centered",
-  middleware: ["guest"]
+    layout: "centered",
+    middleware: ["guest"]
 });
 
-interface LoginPayload {
-    email: string;
-    password: string;
-}
 
 const form = ref<LoginPayload>({
     email: "",
     password: ""
 });
 
-async function login(payload: LoginPayload){
-    await axios.post("/login", payload);
-    await useRouter().push("/me");
-}
 </script>
 <template>
-  <div class="login">
-    <h1>Login</h1>
-    <form @submit.prevent="login(<LoginPayload>form)">
-      <label>
-        <div>Email</div>
-        <input v-model="form.email" type="text" />
-      </label>
+    <div class="login">
+        <h1>Login</h1>
+        <form @submit.prevent="login(<LoginPayload>form)">
+            <label>
+                <div>Email</div>
+                <input v-model="form.email" type="text"/>
+            </label>
 
-      <label>
-        <div>Password</div>
-        <input v-model="form.password" type="password" />
-      </label>
-      <button class="btn">Login</button>
-    </form>
+            <label>
+                <div>Password</div>
+                <input v-model="form.password" type="password"/>
+            </label>
+            <button class="btn">Login</button>
+        </form>
 
-    <p>
-      Don't have an account?
-      <NuxtLink class="underline text-lime-600" to="/register"
-        >Register now!</NuxtLink
-      >
-    </p>
-  </div>
+        <p>
+            Don't have an account?
+            <NuxtLink class="underline text-lime-600" to="/register"
+            >Register now!
+            </NuxtLink
+            >
+        </p>
+    </div>
 </template>
