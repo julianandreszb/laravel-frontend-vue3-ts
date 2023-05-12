@@ -8,6 +8,15 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     axios.defaults.headers.common["Accept"] = "application/json";
     axios.defaults.withCredentials = true;
 
+    axios.interceptors.response.use(res => res, (error) => {
+        if (!error.request.responseURL.endsWith("/api/user/") && [401, 419].includes(error.response.status)) {
+            const {logout} = useAuth();
+            logout();
+        } else {
+            return Promise.reject(error);
+        }
+    })
+
     await axios.get("/sanctum/csrf-cookie", {
         baseURL: config.public.appURL
     });
