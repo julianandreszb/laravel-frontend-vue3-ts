@@ -24,6 +24,8 @@ interface User {
     created_at: Date;
 }
 
+const user = ref<User | null>(null);
+
 export function useAuth() {
 
     async function login(payload: LoginPayload) {
@@ -33,6 +35,7 @@ export function useAuth() {
 
     async function logout() {
         await axios.post("/logout");
+        user.value = null;
         await useRouter().replace("/login");
     }
 
@@ -43,7 +46,9 @@ export function useAuth() {
     }
 
     async function getUser(): Promise<User | null> {
-
+        if (user.value) {
+            return user.value;
+        }
         try {
             const res = await axios.get("/user");
             const user = res.data;
@@ -59,9 +64,15 @@ export function useAuth() {
         }
     }
 
+    async function initUser(){
+        user.value = await getUser();
+    }
+
     return {
         login,
         logout,
         register,
+        initUser,
+        user
     }
 }
