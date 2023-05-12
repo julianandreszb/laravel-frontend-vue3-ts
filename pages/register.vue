@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {useAuth, RegisterPayload} from "~/composables/useAuth";
+import {useAuth} from "~/composables/useAuth";
+import {RegisterPayload} from "~/types/types"
 
 definePageMeta({
     layout: "centered",

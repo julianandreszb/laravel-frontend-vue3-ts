@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {useAuth, LoginPayload} from "~/composables/useAuth";
+import {useAuth} from "~/composables/useAuth";
+import {LoginPayload} from "~/types/types"
 
 const {login} = useAuth();
 
