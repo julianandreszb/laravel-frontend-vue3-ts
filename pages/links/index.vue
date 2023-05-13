@@ -1,29 +1,26 @@
 <script setup lang="ts">
 import axios from "axios";
-axios.get("/links");
-definePageMeta({
-    middleware: ["auth"],
+import {TailwindPagination} from "laravel-vue-pagination/dist/laravel-vue-pagination.es";
+import type {PaginatedResponse, Link} from "~/types/types";
+
+const data = ref<PaginatedResponse<Link> | null>(null);
+
+const queries = ref({
+    page: 1,
+    "filter['']": ""
 });
-const links = [
-    {
-        short_link: "234jlsfsf",
-        full_link: "https://vueschool.io",
-        views: 3,
-        id: 1,
-    },
-    {
-        short_link: "adfaowerw",
-        full_link: "https://google.com",
-        views: 1,
-        id: 2,
-    },
-    {
-        short_link: "234sfdjaip",
-        full_link: "https://vuejsnation.com/",
-        views: 0,
-        id: 3,
-    },
-];
+
+const page = ref(useRoute().query.page || 1);
+let links = computed(() => data.value?.data);
+watch(page, async () => {
+    await getLinks();
+    await useRouter().push({query: {page: page.value}});
+});
+async function getLinks() {
+    const { data: res } = await axios.get(`/links?page=${page.value}`);
+    data.value = res;
+}
+
 </script>
 <template>
     <div>
@@ -91,6 +88,7 @@ const links = [
                     </tr>
                 </tbody>
             </table>
+            <TailwindPagination :data="data" @pagination-change-page="page=$event"/>
             <div class="mt-5 flex justify-center"></div>
         </div>
 

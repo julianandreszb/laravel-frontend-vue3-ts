@@ -1,36 +1,32 @@
 <script setup lang="ts">
 import {useAuth} from "~/composables/useAuth";
 import {LoginPayload} from "~/types/types"
-
-const {login} = useAuth();
+import {FormKitNode} from "@formkit/core";
+import {handleInvalidForm} from "~/utils/utils";
 
 definePageMeta({
     layout: "centered",
     middleware: ["guest"]
 });
+const {login} = useAuth();
 
 
-const form = ref<LoginPayload>({
-    email: "",
-    password: ""
-});
+async function handleLogin(payload: LoginPayload, node?: FormKitNode) {
+    try {
+        await login(payload);
+    } catch (err) {
+        handleInvalidForm(err, node);
+    }
+}
 
 </script>
 <template>
     <div class="login">
         <h1>Login</h1>
-        <form @submit.prevent="login(<LoginPayload>form)">
-            <label>
-                <div>Email</div>
-                <input v-model="form.email" type="text"/>
-            </label>
-
-            <label>
-                <div>Password</div>
-                <input v-model="form.password" type="password"/>
-            </label>
-            <button class="btn">Login</button>
-        </form>
+        <FormKit type="form" submit-label="Login" @submit="handleLogin">
+            <FormKit label="Email" name="email" type="email"/>
+            <FormKit label="Password" name="password" type="password"/>
+        </FormKit>
 
         <p>
             Don't have an account?
